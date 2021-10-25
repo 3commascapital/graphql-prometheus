@@ -2,7 +2,7 @@
   "dependencies": {
     "prom-client": "^14.0.0"
   },
-  "name": "express-graphql-prometheus",
+  "name": "graphql-prometheus",
   "version": "1.0.1",
   "main": "dist/index.js",
   "devDependencies": {
