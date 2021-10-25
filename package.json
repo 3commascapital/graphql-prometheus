@@ -3,7 +3,7 @@
     "prom-client": "^14.0.0"
   },
   "name": "graphql-prometheus",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "main": "dist/index",
   "typings": "dist/index",
   "devDependencies": {
