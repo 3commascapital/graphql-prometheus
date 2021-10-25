@@ -1,0 +1,22 @@
+{
+  "dependencies": {
+    "prom-client": "^14.0.0"
+  },
+  "name": "express-graphql-prometheus",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "devDependencies": {
+    "tsc-alias": "^1.3.10",
+    "typescript": "^4.4.4"
+  },
+  "scripts": {
+    "alias": "tsc-alias -p tsconfig.json",
+    "typecheck": "tsc -p .",
+    "build": "yarn run typecheck && yarn run alias",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
