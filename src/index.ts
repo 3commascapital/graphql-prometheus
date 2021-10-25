@@ -5,6 +5,10 @@ export const registers = [promClient.register]
 
 export const reporter = new Reporter()
 
+export {
+  Reporter
+}
+
 export const register = (rep: Reporter = reporter) => {
   const { registers } = rep
   rep.metric('resolved', new promClient.Counter({
