@@ -37,13 +37,30 @@ export const analytics = metrics.resolve((parent, args, request) => {
 listen to the query / mutation side
 ```js
 // schema.js
-export default new graphql.GraphQLObjectType({
+export const query = new graphql.GraphQLObjectType({
   name: 'Query',
   fields: () => metrics.fields({
     user: {
       type: UserType,
       resolve: (parent, args, request) => {
-        return db.query(`select * from users where id = $1`, [request.userId])
+        const { rows } = await db.query(`select * from users where id = $1`, [request.userId])
+        return rows
+      },
+    },
+  }),
+})
+
+export const mutation = new graphql.GraphQLObjectType({
+  name: 'Mutation',
+  fields: () => metrics.fields({
+    createItem: {
+      type: ItemType,
+      args: {
+        name: { type: graphql.GraphQLString },
+      },
+      resolve: async (parent, args, request) => {
+        const { rows } = await db.query(`insert into items (name) values ($1) returning *`, [args.name])
+        return rows
       },
     },
   }),
