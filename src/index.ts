@@ -55,7 +55,7 @@ export const register = (rep: Reporter = reporter) => {
   }))
 }
 
-export const resolve = (resolver, rep: Reporter = reporter) => async (...inputs) => {
+export const resolver = (resolver, rep: Reporter = reporter) => async (...inputs) => {
   const [parent, args, request, parsed] = inputs
   const labels = {
     parentType: parsed.operation.operation,
@@ -94,9 +94,14 @@ export const field = (resolve, rep: Reporter = reporter) => async (...inputs) =>
   }
 }
 
-export const fields = (targets, rep: Reporter = reporter) => {
+export const iterator = (fn) => (targets, rep: Reporter = reporter) => {
   for (let [key, value] of Object.entries<{resolve: (parent, args, context, parse) => {}}>(targets)) {
-    value.resolve = field(value.resolve, rep)
+    if (value.resolve) {
+      value.resolve = fn(value.resolve, rep)
+    }
   }
   return targets
 }
+
+export const fields = iterator(field)
+export const resolvers = iterator(resolver)
