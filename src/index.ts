@@ -1,4 +1,5 @@
 import * as promClient from 'prom-client'
+import * as graphql from 'graphql'
 import { Reporter } from './reporter'
 
 export const registers = [promClient.register]
@@ -53,6 +54,12 @@ export const register = (rep: Reporter = reporter) => {
     labelNames: ['fieldName', 'operation'],
     registers,
   }))
+  rep.metric('parseTime', new promClient.Histogram({
+    name: 'graphql_parse_time',
+    help: 'The time to parse a request',
+    labelNames: [],
+    registers,
+  }))
 }
 
 export const resolver = (resolver, rep: Reporter = reporter) => async (...inputs) => {
@@ -101,6 +108,13 @@ export const iterator = (fn) => (targets, rep: Reporter = reporter) => {
     }
   }
   return targets
+}
+
+export const parse = (fn = graphql.parse, rep: Reporter = reporter) => (source) => {
+  const timer = rep.histogram('parseTime').startTimer()
+  const parsed = fn(source)
+  timer()
+  return parsed
 }
 
 export const requests = iterator(request)

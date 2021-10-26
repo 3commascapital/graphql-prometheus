@@ -87,3 +87,12 @@ export const mutation = new graphql.GraphQLObjectType({
   }),
 })
 ```
+
+```js
+// parser.js
+import * as graphql from 'graphql'
+export const parser = metrics.parse()
+
+// or
+export const parser = metrics.parse(customParser)
+```
