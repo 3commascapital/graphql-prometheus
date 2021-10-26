@@ -74,7 +74,7 @@ export const resolver = (resolver, rep: Reporter = reporter) => async (...inputs
   }
 }
 
-export const field = (resolve, rep: Reporter = reporter) => async (...inputs) => {
+export const request = (resolve, rep: Reporter = reporter) => async (...inputs) => {
   const [parent, args, context, parsed] = inputs
   const labels = {
     fieldName: parsed.fieldName,
@@ -103,5 +103,5 @@ export const iterator = (fn) => (targets, rep: Reporter = reporter) => {
   return targets
 }
 
-export const fields = iterator(field)
+export const requests = iterator(request)
 export const resolvers = iterator(resolver)
