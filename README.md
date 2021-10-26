@@ -29,38 +29,58 @@ metrics.register(registry)
 listen to each resolve function
 ```js
 // resolvers.js
-export const analytics = metrics.resolve((parent, args, request) => {
+
+// measure timing for this resolver, no matter where it is used
+export const analytics = metrics.resolver((parent, args, request) => {
   return db.query('select * from analytics')
 })
 ```
 
 listen to the query / mutation side
 ```js
-// schema.js
+// query.js
+// use the request method(s) for root entries,
+// to only measure complete queries once
+const user = {
+  type: UserType,
+  resolve: metrics.request((parent, args, request) => {
+    return await db.getUser(request.userId)
+  }),
+}
+
 export const query = new graphql.GraphQLObjectType({
   name: 'Query',
-  fields: () => metrics.fields({
+  fields: () => ({
+    user,
+  })
+})
+
+// or
+export const query = new graphql.GraphQLObjectType({
+  name: 'Query',
+  fields: () => metrics.requests({
     user: {
       type: UserType,
       resolve: (parent, args, request) => {
-        const { rows } = await db.query(`select * from users where id = $1`, [request.userId])
-        return rows
+        return await db.getUser(request.userId)
       },
     },
   }),
 })
+```
 
+```js
+// mutation.js
 export const mutation = new graphql.GraphQLObjectType({
   name: 'Mutation',
-  fields: () => metrics.fields({
+  fields: () => metrics.requests({
     createItem: {
       type: ItemType,
       args: {
         name: { type: graphql.GraphQLString },
       },
       resolve: async (parent, args, request) => {
-        const { rows } = await db.query(`insert into items (name) values ($1) returning *`, [args.name])
-        return rows
+        return await db.insertItem(args.name)
       },
     },
   }),
