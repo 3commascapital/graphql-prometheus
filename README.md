@@ -22,6 +22,7 @@ metrics.register()
 metrics.register({ registers: [register] })
 
 // or
+import { Registry } from 'graphql-prometheus'
 const registry = new Registry(registers)
 metrics.register(registry)
 ```
