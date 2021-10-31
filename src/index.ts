@@ -110,9 +110,9 @@ export const iterator = (fn) => (targets, rep: Reporter = reporter) => {
   return targets
 }
 
-export const parse = (fn = graphql.parse, rep: Reporter = reporter) => (source) => {
+export const parse = (fn = graphql.parse, rep: Reporter = reporter) => (...args) => {
   const timer = rep.histogram('parseTime').startTimer()
-  const parsed = fn(source)
+  const parsed = fn(...args)
   timer()
   return parsed
 }
